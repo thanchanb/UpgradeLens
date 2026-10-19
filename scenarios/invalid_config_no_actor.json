@@ -1,0 +1,15 @@
+{
+  "name": "Invalid Config No Actor",
+  "v1Artifact": "out/StakingVaultV1.sol/StakingVaultV1.json",
+  "v2Artifact": "out/StakingVaultV2_Clean.sol/StakingVaultV2_Clean.json",
+  "proxyArtifact": "out/ERC1967Proxy.sol/ERC1967Proxy.json",
+  "setup": {
+    "rewardRate": "1000000000000"
+  },
+  "expectedChanges": [
+    {
+      "functionName": "version",
+      "allowed": true
+    }
+  ]
+}

@@ -1,0 +1,268 @@
+{
+  "scenario": "Staking Vault: V1 to V2_PartialBug Upgrade (Single-Actor Regression on Charlie)",
+  "timestamp": "2026-10-19T06:36:46.665Z",
+  "proxyAddress": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+  "v1ImplAddress": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "v2ImplAddress": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+  "verdict": "UNEXPECTED REGRESSION DETECTED",
+  "exitCode": 1,
+  "summary": {
+    "totalObservedCalls": 17,
+    "passCount": 12,
+    "expectedChangeCount": 3,
+    "regressionCount": 2,
+    "errorCount": 0,
+    "skippedReadOnlyCount": 1,
+    "skippedCount": 1,
+    "nonApplicableCount": 5
+  },
+  "coverageStats": {
+    "totalFunctions": 15,
+    "readOnlyFunctions": 10,
+    "coveredReadOnlyFunctions": 9,
+    "skippedReadOnlyFunctions": 1,
+    "nonViewFunctionsCount": 5,
+    "coveragePercent": "90.0%",
+    "summaryString": "9 of 10 read-only functions covered"
+  },
+  "comparisons": [
+    {
+      "functionName": "UPGRADE_INTERFACE_VERSION",
+      "signature": "UPGRADE_INTERFACE_VERSION()",
+      "actorLabel": "GLOBAL",
+      "args": [],
+      "preValue": "5.0.0",
+      "postValue": "5.0.0",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "getClaimableReward",
+      "signature": "getClaimableReward(address)",
+      "actorLabel": "alice",
+      "args": [
+        "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      ],
+      "preValue": "60480000000000000000",
+      "postValue": "66528000000000000000",
+      "status": "EXPECTED CHANGE",
+      "reason": "Approved change: Alice 10% loyalty duration bonus applied backward-compatibly (~66.53 ETH)"
+    },
+    {
+      "functionName": "getClaimableReward",
+      "signature": "getClaimableReward(address)",
+      "actorLabel": "bob",
+      "args": [
+        "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+      ],
+      "preValue": "151200000000000000000",
+      "postValue": "166320000000000000000",
+      "status": "EXPECTED CHANGE",
+      "reason": "Approved change: Bob 10% loyalty duration bonus applied backward-compatibly (~166.32 ETH)"
+    },
+    {
+      "functionName": "getClaimableReward",
+      "signature": "getClaimableReward(address)",
+      "actorLabel": "charlie",
+      "args": [
+        "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
+      ],
+      "preValue": "30240000000000000000",
+      "postValue": "0",
+      "status": "UNEXPECTED REGRESSION",
+      "reason": "Post-upgrade value '0' is below minimum bound '33000000000000000000'"
+    },
+    {
+      "functionName": "isEligibleForReward",
+      "signature": "isEligibleForReward(address)",
+      "actorLabel": "alice",
+      "args": [
+        "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      ],
+      "preValue": "true",
+      "postValue": "true",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "isEligibleForReward",
+      "signature": "isEligibleForReward(address)",
+      "actorLabel": "bob",
+      "args": [
+        "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+      ],
+      "preValue": "true",
+      "postValue": "true",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "isEligibleForReward",
+      "signature": "isEligibleForReward(address)",
+      "actorLabel": "charlie",
+      "args": [
+        "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
+      ],
+      "preValue": "true",
+      "postValue": "false",
+      "status": "UNEXPECTED REGRESSION",
+      "reason": "Value shifted from 'true' to 'false' without scenario authorization"
+    },
+    {
+      "functionName": "lastClaimTimestamp",
+      "signature": "lastClaimTimestamp(address)",
+      "actorLabel": "alice",
+      "args": [
+        "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      ],
+      "preValue": "1792391806",
+      "postValue": "1792391806",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "lastClaimTimestamp",
+      "signature": "lastClaimTimestamp(address)",
+      "actorLabel": "bob",
+      "args": [
+        "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+      ],
+      "preValue": "1792391806",
+      "postValue": "1792391806",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "lastClaimTimestamp",
+      "signature": "lastClaimTimestamp(address)",
+      "actorLabel": "charlie",
+      "args": [
+        "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
+      ],
+      "preValue": "1792391806",
+      "postValue": "1792391806",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "owner",
+      "signature": "owner()",
+      "actorLabel": "GLOBAL",
+      "args": [],
+      "preValue": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "postValue": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "rewardRatePerSecond",
+      "signature": "rewardRatePerSecond()",
+      "actorLabel": "GLOBAL",
+      "args": [],
+      "preValue": "1000000000000",
+      "postValue": "1000000000000",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "stakes",
+      "signature": "stakes(address)",
+      "actorLabel": "alice",
+      "args": [
+        "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      ],
+      "preValue": "100000000000000000000",
+      "postValue": "100000000000000000000",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "stakes",
+      "signature": "stakes(address)",
+      "actorLabel": "bob",
+      "args": [
+        "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+      ],
+      "preValue": "250000000000000000000",
+      "postValue": "250000000000000000000",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "stakes",
+      "signature": "stakes(address)",
+      "actorLabel": "charlie",
+      "args": [
+        "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
+      ],
+      "preValue": "50000000000000000000",
+      "postValue": "50000000000000000000",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "totalStaked",
+      "signature": "totalStaked()",
+      "actorLabel": "GLOBAL",
+      "args": [],
+      "preValue": "400000000000000000000",
+      "postValue": "400000000000000000000",
+      "status": "PASS",
+      "reason": "Output strictly identical before and after upgrade"
+    },
+    {
+      "functionName": "version",
+      "signature": "version()",
+      "actorLabel": "GLOBAL",
+      "args": [],
+      "preValue": "V1",
+      "postValue": "V2_PartialBug",
+      "status": "EXPECTED CHANGE",
+      "reason": "Approved change: Implementation version updated to V2_PartialBug"
+    }
+  ],
+  "skippedEntries": [
+    {
+      "functionName": "proxiableUUID",
+      "signature": "proxiableUUID()",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "UUPS implementation-only check (reverts when called via proxy delegatecall by design)"
+    }
+  ],
+  "storageComparisons": [
+    {
+      "slot": 0,
+      "preValue": "0x000000000000000000000000000000000000000000000015af1d78b58c400000",
+      "postValue": "0x000000000000000000000000000000000000000000000015af1d78b58c400000",
+      "status": "PRESERVED"
+    },
+    {
+      "slot": 1,
+      "preValue": "0x000000000000000000000000000000000000000000000000000000e8d4a51000",
+      "postValue": "0x000000000000000000000000000000000000000000000000000000e8d4a51000",
+      "status": "PRESERVED"
+    },
+    {
+      "slot": 2,
+      "preValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "postValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "PRESERVED"
+    },
+    {
+      "slot": 3,
+      "preValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "postValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "PRESERVED"
+    },
+    {
+      "slot": 4,
+      "preValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "postValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "PRESERVED"
+    }
+  ]
+}

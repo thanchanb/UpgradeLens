@@ -1,0 +1,19 @@
+{
+  "name": "Staking Vault: All Calls Skipped (Adversarial Zero Coverage Test)",
+  "description": "Verifies that if every read-only call is ignored or skipped, the engine never falsely passes and exits non-zero.",
+  "v1Artifact": "out/StakingVaultV1.sol/StakingVaultV1.json",
+  "v2Artifact": "out/StakingVaultV2_Clean.sol/StakingVaultV2_Clean.json",
+  "proxyArtifact": "out/ERC1967Proxy.sol/ERC1967Proxy.json",
+  "skipFunctions": ["*"],
+  "setup": {
+    "rewardRate": "1000000000000",
+    "advanceTimeSeconds": 604800,
+    "actors": [
+      {
+        "name": "alice",
+        "depositEth": "100"
+      }
+    ]
+  },
+  "expectedChanges": []
+}

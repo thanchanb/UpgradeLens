@@ -1,0 +1,18 @@
+# Foundry & Compiler outputs
+cache/
+out/
+broadcast/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node dependencies
+node_modules/
+
+# OS and Log files
+.DS_Store
+*.log
+.logs/
+.ignore/

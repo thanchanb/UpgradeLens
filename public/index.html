@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpgradeLens — Stateful Smart-Contract Upgrade Regression Testing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Navigation Header -->
+    <header class="navbar" role="banner">
+        <div class="nav-brand">
+            <div class="brand-logo" aria-hidden="true">
+                <!-- Original Inline SVG: Magnifying Lens Inspecting Stacked Contract Versions -->
+                <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Bottom Contract Layer (V1) -->
+                    <path d="M8 24L20 30L32 24L20 18L8 24Z" fill="rgba(148, 163, 184, 0.15)" stroke="var(--text-muted)" stroke-width="1.6" stroke-linejoin="round"/>
+                    <!-- Top Contract Layer (V2) -->
+                    <path d="M8 17L20 23L32 17L20 11L8 17Z" fill="rgba(0, 240, 255, 0.12)" stroke="var(--accent)" stroke-width="1.8" stroke-linejoin="round"/>
+                    <!-- Inter-layer connecting lines -->
+                    <path d="M8 17V24M32 17V24M20 23V30" stroke="var(--text-muted)" stroke-width="1.4" opacity="0.6"/>
+                    <!-- Magnifying Lens Ring -->
+                    <circle cx="21" cy="17" r="9.5" fill="rgba(14, 165, 233, 0.18)" stroke="var(--accent)" stroke-width="2.2"/>
+                    <!-- Lens Reticle / Focus Crosshair -->
+                    <line x1="21" y1="11.5" x2="21" y2="14" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="21" y1="20" x2="21" y2="22.5" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="15.5" y1="17" x2="18" y2="17" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="24" y1="17" x2="26.5" y2="17" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+                    <!-- Lens Handle -->
+                    <line x1="28" y1="24" x2="36" y2="32" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">UPGRADE<span class="brand-accent">LENS</span></span>
+                <span class="brand-tagline">STATEFUL EVM REGRESSION TESTING</span>
+            </div>
+        </div>
+
+        <div class="nav-controls">
+            <!-- Scenario Selector Pills -->
+            <div class="scenario-selector" role="tablist" aria-label="Select Scenario">
+                <button class="pill-btn active" id="btnBuggyScenario" role="tab" aria-selected="true" data-scenario="buggy_upgrade">
+                    <span class="dot dot-red" aria-hidden="true"></span>
+                    Buggy V2 (Legacy Wipe)
+                </button>
+                <button class="pill-btn" id="btnPartialScenario" role="tab" aria-selected="false" data-scenario="partial_bug_upgrade">
+                    <span class="dot dot-amber" aria-hidden="true"></span>
+                    Partial Bug (Charlie Only)
+                </button>
+                <button class="pill-btn" id="btnCleanScenario" role="tab" aria-selected="false" data-scenario="clean_upgrade">
+                    <span class="dot dot-green" aria-hidden="true"></span>
+                    Clean V2 Control
+                </button>
+            </div>
+
+            <!-- Run Verification Action -->
+            <button id="btnRunTest" class="btn-run" aria-label="Execute Scenario Verification">
+                <span class="spinner hidden" id="runSpinner" aria-hidden="true"></span>
+                <span class="btn-icon" id="runBtnIcon" aria-hidden="true">⚡</span>
+                <span id="runBtnText">Run Verification</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="container">
+        <!-- Verdict Banner (Data-driven) -->
+        <section class="verdict-banner glass-panel" id="verdictBanner" aria-live="polite">
+            <div class="verdict-header">
+                <div class="verdict-badge-row">
+                    <span class="badge" id="bannerBadge">INITIALIZING</span>
+                    <span class="meta-tag" id="bannerExitCode">Exit: --</span>
+                    <span class="meta-tag">EVM: Anvil 1.8.5</span>
+                    <span class="meta-tag">Solc: 0.8.28</span>
+                    <span class="meta-tag">Proxy: ERC-1967 (UUPS)</span>
+                </div>
+                <h1 class="verdict-title" id="scenarioTitle">Loading Scenario...</h1>
+                <p class="verdict-desc" id="scenarioDesc">Reading verified regression reports from disk...</p>
+            </div>
+
+            <!-- Contract Metadata Strip -->
+            <div class="contract-strip">
+                <div class="strip-item">
+                    <span class="strip-label">Proxy Address</span>
+                    <span class="strip-val mono" id="valProxyAddress">--</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-label">V1 Logic</span>
+                    <span class="strip-val mono" id="valV1Address">--</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-label">V2 Logic</span>
+                    <span class="strip-val mono" id="valV2Address">--</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-label">Time Warped</span>
+                    <span class="strip-val" id="valTimeWarp">7 Days (604,800s)</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-label">Report Timestamp</span>
+                    <span class="strip-val mono" id="valTimestamp">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Cards Grid (Real Report Data Only) -->
+        <section class="kpi-grid" aria-label="Key Performance Indicators">
+            <div class="kpi-card glass-panel">
+                <div class="kpi-header">
+                    <span class="kpi-title">Overall Verdict</span>
+                    <span class="kpi-icon" aria-hidden="true">🛡️</span>
+                </div>
+                <div class="kpi-value" id="kpiVerdict">--</div>
+                <div class="kpi-subtext" id="kpiVerdictSub">Process Exit Code: --</div>
+            </div>
+
+            <div class="kpi-card glass-panel">
+                <div class="kpi-header">
+                    <span class="kpi-title">Regressions Detected</span>
+                    <span class="kpi-icon" aria-hidden="true">🚨</span>
+                </div>
+                <div class="kpi-value text-red" id="kpiRegressions">--</div>
+                <div class="kpi-subtext" id="kpiRegressionsSub">State or eligibility drops</div>
+            </div>
+
+            <div class="kpi-card glass-panel">
+                <div class="kpi-header">
+                    <span class="kpi-title">Expected Changes</span>
+                    <span class="kpi-icon" aria-hidden="true">✓</span>
+                </div>
+                <div class="kpi-value text-cyan" id="kpiExpected">--</div>
+                <div class="kpi-subtext" id="kpiExpectedSub">Approved authorized shifts</div>
+            </div>
+
+            <div class="kpi-card glass-panel">
+                <div class="kpi-header">
+                    <span class="kpi-title">Read-Only ABI Coverage</span>
+                    <span class="kpi-icon" aria-hidden="true">📊</span>
+                </div>
+                <div class="kpi-value text-cyan" id="kpiCoverage">--</div>
+                <div class="kpi-subtext" id="kpiCoverageSub">-- of -- view/pure functions</div>
+            </div>
+
+            <div class="kpi-card glass-panel">
+                <div class="kpi-header">
+                    <span class="kpi-title">EVM Storage Preservation</span>
+                    <span class="kpi-icon" aria-hidden="true">📦</span>
+                </div>
+                <div class="kpi-value text-green" id="kpiStorage">--</div>
+                <div class="kpi-subtext">Raw EVM storage slots verified</div>
+            </div>
+        </section>
+
+        <!-- Dual-Pane Matrix & Observation Inspector -->
+        <section class="inspector glass-panel">
+            <div class="inspector-header">
+                <div>
+                    <h2 class="section-title">Stateful Observation Comparison Matrix</h2>
+                    <p class="section-subtitle">Side-by-side read-only EVM call evaluation before and after proxy upgrade across all actors.</p>
+                </div>
+                <!-- Status Filter Chips -->
+                <div class="filter-group" role="group" aria-label="Filter observations by status">
+                    <button class="filter-btn active" data-filter="all">All (<span id="countAll">0</span>)</button>
+                    <button class="filter-btn" data-filter="UNEXPECTED REGRESSION">Regressions (<span id="countRegressions">0</span>)</button>
+                    <button class="filter-btn" data-filter="EXPECTED CHANGE">Changes (<span id="countExpected">0</span>)</button>
+                    <button class="filter-btn" data-filter="PASS">Passed (<span id="countPassed">0</span>)</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="obs-table" id="obsTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Function & Actor</th>
+                            <th scope="col">V1 State (Before Upgrade)</th>
+                            <th scope="col">V2 State (After Upgrade)</th>
+                            <th scope="col">Status & Diagnostic Diagnosis</th>
+                        </tr>
+                    </thead>
+                    <tbody id="obsTableBody">
+                        <!-- Dynamic Report Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Details Grid: Storage Layout + Coverage Accounting -->
+        <section class="details-grid">
+            <!-- Raw EVM Storage Slot Preservation Inspector -->
+            <div class="panel-card glass-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Raw EVM Storage Slot Preservation</h3>
+                    <span class="badge badge-pass" id="storageSummaryBadge">Verified</span>
+                </div>
+                <p class="panel-desc">
+                    Verifies that sequential EVM storage slots remain preserved across proxy upgrades while detecting business logic regressions on stateful observations.
+                </p>
+                <div class="storage-slot-list" id="storageSlotList">
+                    <!-- Dynamic storage slot comparisons -->
+                </div>
+            </div>
+
+            <!-- ABI Coverage & Skipped Transparency Panel -->
+            <div class="panel-card glass-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">ABI Coverage Transparency</h3>
+                    <span class="badge badge-info" id="coverageSummaryBadge">Read-Only Views</span>
+                </div>
+                <p class="panel-desc">
+                    Honest accounting of all contract functions. Skipped views and non-view functions are listed with exact technical reasons.
+                </p>
+                <div class="coverage-breakdown" id="coverageBreakdown">
+                    <!-- Dynamic breakdown -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Tool Scope & Honest Limitations Panel -->
+        <section class="limitations-panel glass-panel">
+            <h3 class="limitations-title">UpgradeLens Verification Scope & Honest Limitations</h3>
+            <div class="limitations-grid">
+                <div class="limit-item">
+                    <strong>1. Differences Are Not Always Bugs:</strong>
+                    <span>An altered post-upgrade observation can be an approved feature. Scenarios must explicitly authorize changes with expected bounds.</span>
+                </div>
+                <div class="limit-item">
+                    <strong>2. Identical Outputs Do Not Prove Safety:</strong>
+                    <span>Passing all checks proves only that observed functions returned expected values; unexercised execution branches or state transitions may still regress.</span>
+                </div>
+                <div class="limit-item">
+                    <strong>3. Bounded Coverage Scope:</strong>
+                    <span>Evaluates only configured actors, arguments, and read-only (view/pure) functions in the V1 ABI. V2-only views are never compared, and state-modifying functions are excluded.</span>
+                </div>
+                <div class="limit-item">
+                    <strong>4. Expected-Change Bounds:</strong>
+                    <span>Expected-change bounds are tuned to this demo and could hide a regression inside the allowed band.</span>
+                </div>
+                <div class="limit-item">
+                    <strong>5. Constructed Bug Patterns:</strong>
+                    <span>The partial-bug V2 is a constructed tier-boundary example, not a measured-frequency claim.</span>
+                </div>
+                <div class="limit-item">
+                    <strong>6. Tooling Overlap Context:</strong>
+                    <span>Statements about Diffusc and other tools are from memory, not verified in this project. UpgradeLens focuses on snapshot comparison on the exact same proxy across an upgrade transaction.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Terminal Output / JSON Inspector -->
+        <section class="terminal-panel glass-panel">
+            <div class="terminal-header">
+                <div class="terminal-title-row">
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-title">Runner Execution Log & Machine-Readable JSON</span>
+                </div>
+                <button class="btn-copy" id="btnCopyJson">Copy JSON Report</button>
+            </div>
+            <pre class="terminal-output mono" id="terminalOutput">Loading report data...</pre>
+        </section>
+    </main>
+
+    <!-- App JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

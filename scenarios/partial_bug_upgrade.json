@@ -1,0 +1,58 @@
+{
+  "name": "Staking Vault: V1 to V2_PartialBug Upgrade (Single-Actor Regression on Charlie)",
+  "description": "Tests an upgrade from StakingVaultV1 to StakingVaultV2_PartialBug across 3 legacy stakers. Demonstrates that while Alice and Bob calculate continuous rewards with the approved loyalty bonus, an off-by-one tier condition causes Charlie's reward and eligibility to unexpectedly drop to 0.",
+  "v1Artifact": "out/StakingVaultV1.sol/StakingVaultV1.json",
+  "v2Artifact": "out/StakingVaultV2_PartialBug.sol/StakingVaultV2_PartialBug.json",
+  "proxyArtifact": "out/ERC1967Proxy.sol/ERC1967Proxy.json",
+  "setup": {
+    "rewardRate": "1000000000000",
+    "advanceTimeSeconds": 604800,
+    "actors": [
+      {
+        "name": "alice",
+        "depositEth": "100"
+      },
+      {
+        "name": "bob",
+        "depositEth": "250"
+      },
+      {
+        "name": "charlie",
+        "depositEth": "50"
+      }
+    ]
+  },
+  "expectedChanges": [
+    {
+      "functionName": "version",
+      "actorLabel": "GLOBAL",
+      "expectedPostValue": "V2_PartialBug",
+      "allowed": true,
+      "reason": "Implementation version updated to V2_PartialBug"
+    },
+    {
+      "functionName": "getClaimableReward",
+      "actorLabel": "alice",
+      "minValue": "66000000000000000000",
+      "maxValue": "67000000000000000000",
+      "allowed": true,
+      "reason": "Alice 10% loyalty duration bonus applied backward-compatibly (~66.53 ETH)"
+    },
+    {
+      "functionName": "getClaimableReward",
+      "actorLabel": "bob",
+      "minValue": "166000000000000000000",
+      "maxValue": "167000000000000000000",
+      "allowed": true,
+      "reason": "Bob 10% loyalty duration bonus applied backward-compatibly (~166.32 ETH)"
+    },
+    {
+      "functionName": "getClaimableReward",
+      "actorLabel": "charlie",
+      "minValue": "33000000000000000000",
+      "maxValue": "34000000000000000000",
+      "allowed": true,
+      "reason": "Charlie 10% loyalty duration bonus applied backward-compatibly (~33.26 ETH)"
+    }
+  ]
+}

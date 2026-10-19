@@ -1,0 +1,163 @@
+{
+  "scenario": "Staking Vault: All Calls Skipped (Adversarial Zero Coverage Test)",
+  "timestamp": "2026-10-19T06:36:48.581Z",
+  "proxyAddress": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+  "v1ImplAddress": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "v2ImplAddress": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+  "verdict": "NO ELIGIBLE OBSERVATIONS EVALUATED (ZERO COVERAGE)",
+  "exitCode": 1,
+  "summary": {
+    "totalObservedCalls": 0,
+    "passCount": 0,
+    "expectedChangeCount": 0,
+    "regressionCount": 0,
+    "errorCount": 0,
+    "skippedReadOnlyCount": 10,
+    "skippedCount": 10,
+    "nonApplicableCount": 5
+  },
+  "coverageStats": {
+    "totalFunctions": 15,
+    "readOnlyFunctions": 10,
+    "coveredReadOnlyFunctions": 0,
+    "skippedReadOnlyFunctions": 10,
+    "nonViewFunctionsCount": 5,
+    "coveragePercent": "0.0%",
+    "summaryString": "0 of 10 read-only functions covered"
+  },
+  "comparisons": [],
+  "skippedEntries": [
+    {
+      "functionName": "UPGRADE_INTERFACE_VERSION",
+      "signature": "UPGRADE_INTERFACE_VERSION()",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "getClaimableReward",
+      "signature": "getClaimableReward(address)",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "isEligibleForReward",
+      "signature": "isEligibleForReward(address)",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "lastClaimTimestamp",
+      "signature": "lastClaimTimestamp(address)",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "owner",
+      "signature": "owner()",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "proxiableUUID",
+      "signature": "proxiableUUID()",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "rewardRatePerSecond",
+      "signature": "rewardRatePerSecond()",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "stakes",
+      "signature": "stakes(address)",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "totalStaked",
+      "signature": "totalStaked()",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    },
+    {
+      "functionName": "version",
+      "signature": "version()",
+      "actorLabel": "N/A",
+      "args": [],
+      "preValue": "N/A",
+      "postValue": "N/A",
+      "status": "SKIPPED",
+      "reason": "Function ignored or skipped via scenario configuration"
+    }
+  ],
+  "storageComparisons": [
+    {
+      "slot": 0,
+      "preValue": "0x0000000000000000000000000000000000000000000000056bc75e2d63100000",
+      "postValue": "0x0000000000000000000000000000000000000000000000056bc75e2d63100000",
+      "status": "PRESERVED"
+    },
+    {
+      "slot": 1,
+      "preValue": "0x000000000000000000000000000000000000000000000000000000e8d4a51000",
+      "postValue": "0x000000000000000000000000000000000000000000000000000000e8d4a51000",
+      "status": "PRESERVED"
+    },
+    {
+      "slot": 2,
+      "preValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "postValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "PRESERVED"
+    },
+    {
+      "slot": 3,
+      "preValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "postValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "PRESERVED"
+    },
+    {
+      "slot": 4,
+      "preValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "postValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "PRESERVED"
+    }
+  ]
+}

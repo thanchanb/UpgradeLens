@@ -1,0 +1,37 @@
+{
+  "name": "Staking Vault: V1 to V2_Clean Upgrade (Wrong Expected Change Test)",
+  "description": "Tests clean upgrade with an unauthorized expected change for getClaimableReward",
+  "v1Artifact": "out/StakingVaultV1.sol/StakingVaultV1.json",
+  "v2Artifact": "out/StakingVaultV2_Clean.sol/StakingVaultV2_Clean.json",
+  "proxyArtifact": "out/ERC1967Proxy.sol/ERC1967Proxy.json",
+  "setup": {
+    "rewardRate": "1000000000000",
+    "advanceTimeSeconds": 604800,
+    "actors": [
+      {
+        "name": "alice",
+        "depositEth": "100"
+      },
+      {
+        "name": "bob",
+        "depositEth": "250"
+      },
+      {
+        "name": "charlie",
+        "depositEth": "50"
+      }
+    ]
+  },
+  "expectedChanges": [
+    {
+      "functionName": "version",
+      "allowed": true,
+      "reason": "Implementation version updated to V2_Clean"
+    },
+    {
+      "functionName": "getClaimableReward",
+      "allowed": false,
+      "reason": "Intentionally set allowed=false to verify regression detection"
+    }
+  ]
+}

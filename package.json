@@ -1,0 +1,32 @@
+{
+  "name": "upgradelens",
+  "version": "1.0.0",
+  "description": "Stateful smart-contract upgrade regression testing engine",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "upgradelens": "./bin/upgradelens.js"
+  },
+  "scripts": {
+    "test": "node scripts/self_test.js",
+    "oz:check": "node scripts/oz_check.js",
+    "build:contracts": "forge build",
+    "test:contracts": "forge test -vv",
+    "test:regression": "node ./bin/upgradelens.js --config scenarios/buggy_upgrade.json",
+    "test:clean": "node ./bin/upgradelens.js --config scenarios/clean_upgrade.json"
+  },
+  "keywords": [
+    "solidity",
+    "evm",
+    "smart-contracts",
+    "upgradeability",
+    "testing",
+    "regression-testing"
+  ],
+  "author": "UpgradeLens Team",
+  "license": "MIT",
+  "devDependencies": {
+    "chalk": "^4.1.2",
+    "viem": "^2.57.7"
+  }
+}
