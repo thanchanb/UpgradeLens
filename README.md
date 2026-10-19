@@ -67,9 +67,12 @@ Observed and verified on macOS (Apple Silicon / Darwin):
 ## 🛠 Installation & Setup
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/upgradelens/upgradelens.git
-cd UPGRADELENS
+# 1. Clone repository with submodules (required for Foundry dependencies)
+git clone --recurse-submodules https://github.com/thanchanb/UpgradeLens.git
+cd UpgradeLens
+
+# Or if cloned without --recurse-submodules, initialize them:
+git submodule update --init --recursive
 
 # 2. Install Node dependencies (development only: chalk, viem)
 npm install
